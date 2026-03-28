@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@theme {
+  /* === RCB Color Palette === */
+  --color-rcb-red: #E4002B;
+  --color-rcb-red-deep: #B8001F;
+  --color-rcb-red-glow: #FF1A47;
+  --color-rcb-black: #0A0A0A;
+  --color-rcb-black-light: #141414;
+  --color-rcb-black-card: #1A1A1A;
+  --color-rcb-gold: #C8A95E;
+  --color-rcb-gold-muted: #A08A5B;
+  --color-rcb-gold-bright: #E8C96E;
+  --color-rcb-cream: #F5F0E8;
+  --color-rcb-cream-dark: #E8E0D0;
+  --color-rcb-gray: #888888;
+  --color-rcb-gray-dark: #333333;
+
+  /* === Typography === */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* === Animation Durations === */
+  --animate-fade-up: fade-up 0.8s ease-out forwards;
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-shimmer: shimmer 3s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+/* === Keyframes === */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: -200% center; }
+  50% { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(228, 0, 43, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(228, 0, 43, 0.4); }
+}
+
+/* === Base Styles === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-rcb-black);
+  color: var(--color-rcb-cream);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === Utility Classes === */
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-rcb-gold), var(--color-rcb-gold-bright), var(--color-rcb-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-red {
+  background: linear-gradient(135deg, var(--color-rcb-red), var(--color-rcb-red-glow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gradient-gold {
+  border-image: linear-gradient(135deg, var(--color-rcb-gold), var(--color-rcb-gold-muted)) 1;
+}
+
+.bg-noise {
+  position: relative;
+}
+
+.bg-noise::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-rcb-gold), transparent);
+  border: none;
+}
+
+/* Scroll animation observer classes */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+
+/* === Section Spacing === */
+section {
+  position: relative;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-rcb-black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-rcb-gold-muted);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-rcb-gold);
+}
