@@ -17,7 +17,7 @@
   --color-rcb-gray-dark: #333333;
 
   /* === Typography === */
-  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-serif: 'Outfit', sans-serif;
   --font-sans: 'Inter', system-ui, sans-serif;
 
   /* === Animation Durations === */
@@ -54,6 +54,24 @@
   50% { box-shadow: 0 0 40px rgba(228, 0, 43, 0.4); }
 }
 
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
 /* === Base Styles === */
 * {
   margin: 0;
@@ -75,6 +93,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* === Film Grain / Noise Overlay === */
+.noise-overlay {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  animation: grain 8s steps(10) infinite;
+}
+
 /* === Utility Classes === */
 .text-gradient-gold {
   background: linear-gradient(135deg, var(--color-rcb-gold), var(--color-rcb-gold-bright), var(--color-rcb-gold));
@@ -94,18 +126,10 @@ body {
   border-image: linear-gradient(135deg, var(--color-rcb-gold), var(--color-rcb-gold-muted)) 1;
 }
 
-.bg-noise {
-  position: relative;
-}
-
-.bg-noise::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
+.glass-panel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
 }
 
 .gold-rule {
@@ -117,7 +141,7 @@ body {
 /* Scroll animation observer classes */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(30px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -139,15 +163,106 @@ section {
 
 /* === Scrollbar === */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-rcb-black);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-rcb-gold-muted);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-rcb-gold);
+}
+
+/* === Scroll Indicator Animation === */
+.scroll-indicator {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+/* === Clean link underline effect === */
+.link-hover {
+  position: relative;
+}
+.link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-rcb-gold);
+  transition: width 0.3s ease;
+}
+.link-hover:hover::after {
+  width: 100%;
+}
+
+/* === Nothing-Inspired Dot Matrix === */
+.font-dot {
+  font-family: 'Silkscreen', monospace;
+}
+
+.dot-matrix-bg {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 1.2px, transparent 1.2px);
+  background-size: 12px 12px;
+}
+
+.dot-matrix-red {
+  background-image: radial-gradient(circle, rgba(228, 0, 43, 0.15) 1.2px, transparent 1.2px);
+  background-size: 12px 12px;
+}
+
+.dot-matrix-gold {
+  background-image: radial-gradient(circle, rgba(200, 169, 94, 0.12) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+/* Dot matrix text glow (Nothing-style) */
+.dot-text {
+  font-family: 'Silkscreen', monospace;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.dot-text-dim {
+  font-family: 'Silkscreen', monospace;
+  opacity: 0.4;
+  text-shadow: 0 0 4px currentColor;
+  transition: opacity 0.3s ease, text-shadow 0.3s ease;
+}
+
+.dot-text-dim:hover {
+  opacity: 1;
+  text-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+}
+
+/* === Interactive Card Hover === */
+.interactive-card {
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s ease;
+}
+.interactive-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(228, 0, 43, 0.1);
+}
+
+/* === Magnetic Hover Glow === */
+.hover-glow {
+  position: relative;
+}
+.hover-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent, rgba(228, 0, 43, 0.2), transparent);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.hover-glow:hover::before {
+  opacity: 1;
 }

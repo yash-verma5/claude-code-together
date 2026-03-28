@@ -1,56 +1,57 @@
-import { useEffect } from 'react'
+import { useState } from 'react'
+import CustomCursor from './components/CustomCursor'
+import SmoothScrollProvider from './components/SmoothScrollProvider'
+import Preloader from './components/Preloader'
+import ScrollProgress from './components/ScrollProgress'
 import Hero from './components/Hero'
 import SocialProof from './components/SocialProof'
+import Stats from './components/Stats'
 import Features from './components/Features'
+import JerseyViewer from './components/JerseyViewer'
 import BottomCTA from './components/BottomCTA'
 import ContactForm from './components/ContactForm'
 import Footer from './components/Footer'
 
 function App() {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible')
-          }
-        })
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
-    )
-
-    const revealElements = document.querySelectorAll('.reveal')
-    revealElements.forEach((el) => observer.observe(el))
-
-    return () => observer.disconnect()
-  }, [])
+  const [loaded, setLoaded] = useState(false)
 
   return (
-    <div className="min-h-screen bg-rcb-black overflow-x-hidden">
-      <Hero />
+    <>
+      {!loaded && <Preloader onComplete={() => setLoaded(true)} />}
 
-      {/* Gold divider */}
-      <div className="px-8 md:px-20 lg:px-40">
-        <hr className="gold-rule" />
-      </div>
+      <SmoothScrollProvider>
+        <div className="min-h-screen bg-rcb-black overflow-x-hidden selection:bg-rcb-red selection:text-white">
+          {/* Noise texture overlay */}
+          <div className="noise-overlay" />
 
-      <SocialProof />
+          <CustomCursor />
+          <ScrollProgress />
 
-      <div className="px-8 md:px-20 lg:px-40">
-        <hr className="gold-rule" />
-      </div>
+          <Hero />
 
-      <Features />
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
 
-      <BottomCTA />
+          <SocialProof />
 
-      <div className="px-8 md:px-20 lg:px-40">
-        <hr className="gold-rule" />
-      </div>
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
 
-      <ContactForm />
-      <Footer />
-    </div>
+          <Stats />
+
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+
+          <Features />
+
+          <JerseyViewer />
+
+          <BottomCTA />
+
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+
+          <ContactForm />
+          <Footer />
+        </div>
+      </SmoothScrollProvider>
+    </>
   )
 }
 

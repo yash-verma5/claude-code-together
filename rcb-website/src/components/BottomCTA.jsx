@@ -1,31 +1,117 @@
+import { useRef, useCallback } from 'react'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
 export default function BottomCTA() {
+  const containerRef = useRef(null)
+  const textRef = useRef(null)
+  const btnRef = useRef(null)
+  const btnInnerRef = useRef(null)
+
+  useGSAP(() => {
+    gsap.fromTo(
+      textRef.current,
+      { scale: 0.85, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 80%',
+          end: 'center center',
+          scrub: 1,
+        }
+      }
+    )
+
+    gsap.fromTo(
+      btnRef.current,
+      { y: 60, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 60%',
+          end: 'center center',
+          scrub: 1,
+        }
+      }
+    )
+  }, [])
+
+  // Magnetic button effect
+  const handleMouseMove = useCallback((e) => {
+    const btn = btnInnerRef.current
+    if (!btn) return
+    const rect = btn.getBoundingClientRect()
+    const x = e.clientX - rect.left - rect.width / 2
+    const y = e.clientY - rect.top - rect.height / 2
+    gsap.to(btn, {
+      x: x * 0.3,
+      y: y * 0.3,
+      duration: 0.4,
+      ease: 'power2.out',
+    })
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    gsap.to(btnInnerRef.current, {
+      x: 0,
+      y: 0,
+      duration: 0.6,
+      ease: 'elastic.out(1, 0.3)',
+    })
+  }, [])
+
   return (
-    <section className="relative py-32 md:py-48 bg-rcb-black overflow-hidden flex items-center justify-center border-y border-rcb-gold/20">
-      {/* Heavy centered background glow for focus */}
+    <section ref={containerRef} className="relative h-screen bg-rcb-black flex flex-col items-center justify-center overflow-hidden">
+
+      {/* Raw typography background */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[800px] h-[800px] bg-rcb-red/10 rounded-full blur-[150px]" />
+        <h2 className="font-serif text-[30vw] font-black uppercase tracking-tighter text-white/[0.02] leading-none text-center select-none">
+          RCB
+        </h2>
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center flex flex-col items-center">
-        
-        <div className="reveal w-24 h-[1px] bg-rcb-gold mb-10"></div>
+      {/* Subtle glow */}
+      <div className="absolute w-[500px] h-[500px] bg-rcb-red/5 rounded-full blur-[200px] pointer-events-none" />
 
-        <h2 className="reveal reveal-delay-1 font-serif text-5xl md:text-7xl lg:text-8xl font-black uppercase text-rcb-cream leading-[0.9] tracking-tight">
-          READY TO <span className="text-gradient-red block">RELIVE</span>
-          THE <span className="text-gradient-gold">GLORY?</span>
+      <div className="relative z-10 w-full px-6 flex flex-col items-center justify-center">
+
+        <h2 ref={textRef} className="font-serif text-[9vw] md:text-[7vw] font-black uppercase text-white leading-[0.85] tracking-tighter text-center max-w-[90vw]">
+          READY TO <br />
+          <span className="text-rcb-red" style={{ textShadow: '0 0 60px rgba(228, 0, 43, 0.2)' }}>RELIVE</span><br />
+          THE GLORY?
         </h2>
 
-        <p className="reveal reveal-delay-2 text-rcb-cream/60 text-xl mt-10 font-light max-w-2xl mx-auto leading-relaxed">
-          The roar of the crowd never fades. Secure your place in the legacy and experience the premium matchday magic firsthand.
-        </p>
-
-        {/* High Contrast Solid CTA Block per findings */}
-        <div className="reveal reveal-delay-3 mt-14">
+        <div
+          ref={btnRef}
+          className="mt-16 md:mt-20"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
           <a
+            ref={btnInnerRef}
             href="#contact"
-            className="group relative inline-flex items-center justify-center px-12 py-5 bg-rcb-gold text-rcb-black font-black text-xl tracking-widest uppercase rounded-sm overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(200,169,94,0.4)]"
+            className="group relative inline-flex items-center justify-center w-36 h-36 md:w-48 md:h-48 rounded-full border border-white/10 hover:border-rcb-red/50 transition-colors duration-700 overflow-hidden"
           >
-            <span className="relative z-10">GET TICKETS</span>
+            {/* Fill effect */}
+            <div className="absolute inset-0 bg-rcb-red scale-0 rounded-full transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:scale-100 origin-center" />
+
+            {/* Glow ring on hover */}
+            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              style={{ boxShadow: '0 0 40px rgba(228, 0, 43, 0.3), inset 0 0 40px rgba(228, 0, 43, 0.1)' }}
+            />
+
+            <span className="relative z-10 font-sans text-[10px] md:text-xs tracking-[0.3em] uppercase font-bold text-white/70 group-hover:text-white transition-colors duration-500">
+              Get Tickets
+            </span>
           </a>
         </div>
 
